@@ -1,0 +1,180 @@
+
+<h2 class="sr-only">Dashboard mess benchmark cập nhật đủ 12 ads gồm cả Photo và Video</h2>
+
+<div style="padding: 1rem 0;">
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 1.5rem;">
+  <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem; text-align: center;">
+    <div style="font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px;">Tổng mess</div>
+    <div style="font-size: 22px; font-weight: 500; color: var(--color-text-primary);">6.259</div>
+    <div style="font-size: 11px; color: var(--color-text-tertiary);">12 ads</div>
+  </div>
+  <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem; text-align: center;">
+    <div style="font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px;">Cost/Mess tb</div>
+    <div style="font-size: 22px; font-weight: 500; color: var(--color-text-primary);">215K</div>
+    <div style="font-size: 11px; color: var(--color-text-tertiary);">VNĐ / tin nhắn</div>
+  </div>
+  <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem; text-align: center;">
+    <div style="font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px;">Mess-to-Lead tb</div>
+    <div style="font-size: 22px; font-weight: 500; color: var(--color-text-primary);">15.6%</div>
+    <div style="font-size: 11px; color: var(--color-text-tertiary);">mess → để lại SDT</div>
+  </div>
+  <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem; text-align: center;">
+    <div style="font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px;">Best cost/mess</div>
+    <div style="font-size: 22px; font-weight: 500; color: var(--color-text-primary);">117K</div>
+    <div style="font-size: 11px; color: var(--color-text-tertiary);">NSTH Nguyệt</div>
+  </div>
+  <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem; text-align: center;">
+    <div style="font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px;">Best M→L rate</div>
+    <div style="font-size: 22px; font-weight: 500; color: var(--color-text-primary);">25.9%</div>
+    <div style="font-size: 11px; color: var(--color-text-tertiary);">TSĐQ Bác Tâm</div>
+  </div>
+</div>
+
+<div style="margin-bottom: 1.5rem;">
+  <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 8px; font-size: 12px; color: var(--color-text-secondary);">
+    <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#639922;"></span>Đạt ≤ 200K</span>
+    <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#378ADD;"></span>Gần đạt ≤ 280K</span>
+    <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#E24B4A;"></span>Cần cải thiện</span>
+    <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:2px;background:#888780;display:inline-block;border-top: 2px dashed #888780;"></span>Benchmark 200K</span>
+    <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#EEEDFE;border:1px solid #7F77DD;"></span>Photo</span>
+  </div>
+  <div style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 8px;">Cost per mess từng ad (nghìn VNĐ) — target ≤ 200K</div>
+  <div style="position: relative; width: 100%; height: 300px;">
+    <canvas id="costMessChart" role="img" aria-label="Bar chart cost per mess 12 ads với benchmark 200K">Cost/mess 12 ads bao gồm MRI/CT Photo 198K, Clip7 168K, TQ-TS 284K, Clip1 230K, Clip4 149K, Clip6 325K, Não3D 146K, BácTâm 261K, PACS 299K, Nội soi 215K, Nguyệt 117K, TQ-NS 182K</canvas>
+  </div>
+</div>
+
+<div style="margin-bottom: 1.5rem;">
+  <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 8px; font-size: 12px; color: var(--color-text-secondary);">
+    <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#639922;"></span>Đạt ≥ 20%</span>
+    <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#378ADD;"></span>Gần đạt ≥ 15%</span>
+    <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#E24B4A;"></span>Cần cải thiện</span>
+    <span style="display:flex;align-items:center;gap:4px;"><span style="width:14px;height:2px;background:#888780;display:inline-block;border-top: 2px dashed #888780;"></span>Benchmark 20%</span>
+    <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#EEEDFE;border:1px solid #7F77DD;"></span>Photo</span>
+  </div>
+  <div style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 8px;">Mess-to-Lead rate từng ad (%) — target ≥ 20%</div>
+  <div style="position: relative; width: 100%; height: 300px;">
+    <canvas id="m2lChart" role="img" aria-label="Bar chart mess to lead rate 12 ads với benchmark 20%">M2L rate: MRI/CT 15.7%, Clip7 19.1%, TQ-TS 13.5%, Clip1 13%, Clip4 10.5%, Clip6 18%, Não3D 11.2%, BácTâm 25.9%, PACS 22.8%, Nội soi 8.75%, Nguyệt 13.3%, TQ-NS 17.5%</canvas>
+  </div>
+</div>
+
+<div style="border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem;">
+  <div style="font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 12px;">Benchmark mess cho ads tiếp theo</div>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
+    <div style="border-radius:var(--border-radius-md); padding: 10px 14px; background:#EAF3DE;">
+      <div style="font-size:11px; color:#3B6D11; font-weight:500;">Cost/Mess target</div>
+      <div style="font-size:22px; font-weight:500; color:#27500A;">≤ 200K</div>
+      <div style="font-size:11px; color:#639922;">Đạt: MRI/CT, Clip7, Clip4, Não3D, Nguyệt, TQ-NS</div>
+    </div>
+    <div style="border-radius:var(--border-radius-md); padding: 10px 14px; background:#E6F1FB;">
+      <div style="font-size:11px; color:#185FA5; font-weight:500;">Mess-to-Lead target</div>
+      <div style="font-size:22px; font-weight:500; color:#0C447C;">≥ 20%</div>
+      <div style="font-size:11px; color:#378ADD;">Đạt: BácTâm (25.9%), PACS (22.8%)</div>
+    </div>
+    <div style="border-radius:var(--border-radius-md); padding: 10px 14px; background:#FAEEDA;">
+      <div style="font-size:11px; color:#854F0B; font-weight:500;">Cost/Mess tối đa</div>
+      <div style="font-size:22px; font-weight:500; color:#633806;">≤ 280K</div>
+      <div style="font-size:11px; color:#BA7517;">Ngưỡng cần review ngay</div>
+    </div>
+  </div>
+  <div style="margin-top: 12px; padding: 10px 14px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); font-size: 12px; color: var(--color-text-secondary); line-height: 1.7;">
+    Ads Photo có hành vi khác Video: MRI/CT Photo đạt cost/mess 198K (sát benchmark) nhưng M→L chỉ 15.7% — người nhắn tin qua ảnh thường tò mò hơn là có intent rõ ràng. Nên đặt benchmark riêng cho Photo nếu scale thêm format này.
+  </div>
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const labels = ['MRI/CT\n(Photo)','Clip7','TQ-TS','Clip1','Clip4','Clip6','Não3D','BácTâm','PACS','Nội soi\n(Photo)','Nguyệt','TQ-NS'];
+const isPhoto = [true,false,false,false,false,false,false,false,false,true,false,false];
+const costMess = [198, 168, 284, 230, 149, 325, 146, 261, 299, 215, 117, 182];
+const messArr =  [1184,1035, 347,  23, 428,  50,1423, 266, 237,  80, 929, 257];
+const leadsArr = [186,  198,  47,   3,  45,   9, 160,  69,  54,   7, 124,  45];
+const m2l = messArr.map((m,i) => parseFloat((leadsArr[i]/m*100).toFixed(1)));
+
+const cmColors = costMess.map((v,i) => {
+  const base = v <= 200 ? '#639922' : v <= 280 ? '#378ADD' : '#E24B4A';
+  return base;
+});
+const cmBorders = isPhoto.map(p => p ? '#7F77DD' : 'transparent');
+
+const m2lColors = m2l.map((v,i) => v >= 20 ? '#639922' : v >= 15 ? '#378ADD' : '#E24B4A');
+
+new Chart(document.getElementById('costMessChart'), {
+  type: 'bar',
+  data: {
+    labels,
+    datasets: [
+      {
+        label: 'Cost/Mess',
+        data: costMess,
+        backgroundColor: cmColors,
+        borderColor: cmBorders,
+        borderWidth: isPhoto.map(p => p ? 2 : 0),
+        borderRadius: 4
+      },
+      {
+        label: 'Benchmark 200K',
+        data: new Array(12).fill(200),
+        type: 'line',
+        borderColor: '#888780',
+        borderDash:[5,4],
+        borderWidth:1.5,
+        pointRadius:0,
+        fill:false
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend:{display:false},
+      tooltip:{callbacks:{label: ctx => ctx.datasetIndex===0 ? 'Cost/Mess: '+ctx.parsed.y+'K'+(isPhoto[ctx.dataIndex]?' (Photo)':'') : 'Benchmark: 200K'}}
+    },
+    scales: {
+      y: { ticks:{callback: v=>v+'K', font:{size:11}}, grid:{color:'rgba(136,135,128,0.15)'}},
+      x: { ticks:{font:{size:10}, autoSkip:false, maxRotation:0}, grid:{display:false}}
+    }
+  }
+});
+
+new Chart(document.getElementById('m2lChart'), {
+  type: 'bar',
+  data: {
+    labels,
+    datasets: [
+      {
+        label: 'Mess-to-Lead',
+        data: m2l,
+        backgroundColor: m2lColors,
+        borderColor: cmBorders,
+        borderWidth: isPhoto.map(p => p ? 2 : 0),
+        borderRadius: 4
+      },
+      {
+        label: 'Benchmark 20%',
+        data: new Array(12).fill(20),
+        type: 'line',
+        borderColor: '#888780',
+        borderDash:[5,4],
+        borderWidth:1.5,
+        pointRadius:0,
+        fill:false
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend:{display:false},
+      tooltip:{callbacks:{label: ctx => ctx.datasetIndex===0 ? 'M→L: '+ctx.parsed.y+'%'+(isPhoto[ctx.dataIndex]?' (Photo)':'') : 'Benchmark: 20%'}}
+    },
+    scales: {
+      y: { ticks:{callback: v=>v+'%', font:{size:11}}, grid:{color:'rgba(136,135,128,0.15)'}},
+      x: { ticks:{font:{size:10}, autoSkip:false, maxRotation:0}, grid:{display:false}}
+    }
+  }
+});
+</script>
