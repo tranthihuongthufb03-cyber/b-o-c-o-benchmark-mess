@@ -1,0 +1,684 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Video Ads Conversion Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg: #171816;
+      --panel: #22231f;
+      --panel-2: #2b2c28;
+      --line: rgba(255,255,255,.08);
+      --text: #f5f2ea;
+      --muted: #aaa59b;
+      --soft: #f2f7e8;
+      --blue: #69aaf7;
+      --blue-2: #2c7fd9;
+      --green: #92c94b;
+      --green-2: #cbe7b4;
+      --red: #eb5757;
+      --orange: #f39c7b;
+      --yellow: #ffe9bd;
+      --purple: #dcd9ff;
+      --pink: #ffe9e9;
+      --shadow: 0 14px 40px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top left, rgba(80,150,255,.12), transparent 26%),
+                  radial-gradient(circle at top right, rgba(143,201,75,.10), transparent 28%),
+                  var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+    .wrap {
+      width: min(1180px, calc(100vw - 36px));
+      margin: 0 auto;
+      padding: 32px 0 56px;
+    }
+    .header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: start;
+      margin-bottom: 22px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(26px, 4vw, 44px);
+      letter-spacing: -1.1px;
+      line-height: 1.05;
+    }
+    .sub {
+      margin: 0;
+      color: var(--muted);
+      max-width: 760px;
+    }
+    .badge {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color: var(--green-2);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .kpi {
+      background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.025));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px 16px 14px;
+      box-shadow: var(--shadow);
+    }
+    .kpi .label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 7px;
+    }
+    .kpi .value {
+      font-size: 25px;
+      font-weight: 850;
+      letter-spacing: -.5px;
+    }
+    .kpi .note {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+    .journey {
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin: 20px 0 18px;
+    }
+    .journey-title {
+      font-size: 17px;
+      font-weight: 850;
+      margin-bottom: 14px;
+      color: #e8e3d8;
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      align-items: stretch;
+    }
+    .step {
+      text-align: center;
+      min-height: 76px;
+      border-radius: 12px;
+      padding: 12px 8px;
+      color: #19300c;
+      font-weight: 850;
+      position: relative;
+    }
+    .step small {
+      display: block;
+      margin-top: 7px;
+      color: rgba(0,0,0,.55);
+      font-weight: 750;
+    }
+    .step:nth-child(1) { background: #eaf4ff; color:#164676; }
+    .step:nth-child(2) { background: #e9e8ff; color:#312a82; }
+    .step:nth-child(3) { background: #f2edff; color:#513381; }
+    .step:nth-child(4) { background: #ecf9de; color:#315a15; }
+    .step:nth-child(5) { background: #e8f7d7; color:#315a15; }
+    .alert {
+      background: #ffeaea;
+      color: #8a1d1d;
+      border-left: 4px solid #ff5252;
+      padding: 12px 14px;
+      border-radius: 0 10px 10px 0;
+      margin: 12px 0 0;
+      font-size: 14px;
+      font-weight: 650;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1.08fr .92fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .card {
+      background: rgba(34,35,31,.92);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+    .card h2 {
+      margin: 0 0 6px;
+      font-size: 18px;
+      letter-spacing: -.2px;
+    }
+    .card .desc {
+      color: var(--muted);
+      margin: 0 0 14px;
+      font-size: 13px;
+    }
+    .chartbox {
+      height: 330px;
+      position: relative;
+    }
+    .chartbox.small { height: 285px; }
+    .chartbox.tall { height: 380px; }
+    .insight-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .insight {
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .insight b { color: #fff; }
+    .warn {
+      background: #fff0d9;
+      color: #7d4b00;
+      border-color: rgba(255,255,255,.1);
+    }
+    .good {
+      background: rgba(120,205,88,.13);
+      border-color: rgba(120,205,88,.22);
+    }
+    .bad {
+      background: rgba(235,87,87,.13);
+      border-color: rgba(235,87,87,.23);
+    }
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      margin-top: 12px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1000px;
+      background: rgba(255,255,255,.03);
+    }
+    th, td {
+      padding: 12px 11px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      font-size: 13px;
+      vertical-align: middle;
+    }
+    th {
+      color: #f7f1e6;
+      background: rgba(255,255,255,.06);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+    td.num, th.num { text-align: right; }
+    tr:last-child td { border-bottom: 0; }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-weight: 800;
+      font-size: 12px;
+      background: rgba(255,255,255,.08);
+      color: #f2f2f2;
+      white-space: nowrap;
+    }
+    .tag.green { background: rgba(118,201,77,.18); color:#d9f6c8; }
+    .tag.yellow { background: rgba(255,204,102,.18); color:#ffe8a9; }
+    .tag.red { background: rgba(235,87,87,.18); color:#ffc9c9; }
+    .footer {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+    @media (max-width: 920px) {
+      .header { grid-template-columns: 1fr; }
+      .kpis { grid-template-columns: repeat(2, 1fr); }
+      .steps { grid-template-columns: 1fr; }
+      .grid, .grid-3 { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 520px) {
+      .kpis { grid-template-columns: 1fr; }
+      .wrap { width: min(100vw - 22px, 1180px); padding-top: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="header">
+      <div>
+        <h1>Video Ads Conversion Dashboard</h1>
+        <p class="sub">Dashboard phân tích hiệu quả từ <b>Mess → Lead → Done Deal → Doanh số</b>, dùng để nhìn nhanh video/ad nào tạo volume tốt, ad nào kéo khách chất lượng và điểm nghẽn sau khi khách nhắn tin.</p>
+      </div>
+      <div class="badge">Dữ liệu theo bảng ads 12 mẫu</div>
+    </header>
+
+    <section class="kpis" id="kpiCards"></section>
+
+    <section class="journey">
+      <div class="journey-title">Hành trình khách hàng từ ads đến chốt dịch vụ</div>
+      <div class="steps">
+        <div class="step">Xem video / ad<small>Impression → CTR</small></div>
+        <div class="step">Nhắn tin<small>Mess</small></div>
+        <div class="step">Để lại SĐT<small>Lead</small></div>
+        <div class="step">Tư vấn & khảo sát<small>Call / Offline</small></div>
+        <div class="step">Chốt dịch vụ<small>Done Deal</small></div>
+      </div>
+      <div class="alert">Bảng hiện tại đo rõ từ bước <b>Mess → Lead → Done Deal</b>. Các conversion từ hotline, web booking, Zalo hoặc walk-in chưa được cộng vào dashboard này.</div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>Mess quality — Cost/Mess và Mess-to-Lead Rate</h2>
+        <p class="desc">So sánh chi phí tạo tin nhắn với tỷ lệ tin nhắn chuyển thành SĐT. Mục tiêu là cost thấp nhưng tỷ lệ lead cao.</p>
+        <div class="chartbox"><canvas id="qualityChart"></canvas></div>
+      </div>
+      <div class="card">
+        <h2>Đọc nhanh insight trọng tâm</h2>
+        <p class="desc">Các điểm cần đưa vào phần nhận xét cho CEO.</p>
+        <div class="insight-list">
+          <div class="insight good"><b>MRI/CT Photo</b> đang dẫn đầu về doanh số và số deal: <b>37 deal</b>, doanh số khoảng <b>361 triệu</b>, ROAS <b>1.54x</b>.</div>
+          <div class="insight good"><b>Bác Tâm</b> là mẫu có chất lượng lead tốt: Mess-to-Lead <b>25.94%</b>, Lead-to-Deal <b>17.39%</b>, ROAS <b>2.17x</b>.</div>
+          <div class="insight warn"><b>Nguyệt Review</b> có Cost/Mess rẻ nhất và volume mess cao, nhưng ROAS chỉ <b>0.25x</b> → vấn đề nằm sau bước nhắn tin: lọc lead, tư vấn, offer hoặc chất lượng khách.</div>
+          <div class="insight bad"><b>Clip 7</b> tạo nhiều lead nhất nhưng ROAS dưới 1x → cần audit hành trình tư vấn/chốt, không nên chỉ nhìn lead volume.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>Volume mess theo từng ad</h2>
+        <p class="desc">Ad nào tạo được nhiều cuộc hội thoại nhất.</p>
+        <div class="chartbox small"><canvas id="messChart"></canvas></div>
+      </div>
+      <div class="card">
+        <h2>Funnel tổng: Mess → Lead → Deal</h2>
+        <p class="desc">Tỷ lệ chuyển đổi tổng toàn bộ danh mục.</p>
+        <div class="chartbox small"><canvas id="funnelChart"></canvas></div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>ROAS theo từng ad</h2>
+        <p class="desc">ROAS = Doanh số / Số tiền chi tiêu. ROAS trên 1 nghĩa là doanh số lớn hơn chi tiêu ads.</p>
+        <div class="chartbox"><canvas id="roasChart"></canvas></div>
+      </div>
+      <div class="card">
+        <h2>Doanh số vs số tiền chi tiêu</h2>
+        <p class="desc">Giúp nhận diện ad có doanh số cao nhưng cũng đang tiêu nhiều ngân sách.</p>
+        <div class="chartbox"><canvas id="revenueSpendChart"></canvas></div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>Ma trận ưu tiên: Volume mess vs ROAS</h2>
+        <p class="desc">Góc trên phải là nhóm nên scale: volume tốt và ROAS tốt.</p>
+        <div class="chartbox"><canvas id="matrixChart"></canvas></div>
+      </div>
+      <div class="card">
+        <h2>Action plan đề xuất</h2>
+        <p class="desc">Định hướng tối ưu theo từng nhóm vấn đề.</p>
+        <div class="insight-list">
+          <div class="insight good"><b>Nhóm scale:</b> MRI/CT Photo, Bác Tâm, Não 3D. Giữ ngân sách, test thêm biến thể hook và CTA.</div>
+          <div class="insight warn"><b>Nhóm nhiều mess nhưng chốt yếu:</b> Clip 7, Nguyệt Review. Cần nghe lại file tư vấn, kiểm tra kịch bản hỏi SĐT, offer và chất lượng tệp.</div>
+          <div class="insight"><b>Nhóm ROAS cao nhưng sample nhỏ:</b> Clip 1, Clip 6. Không vội kết luận winner, nên test tăng ngân sách nhỏ 10–20% rồi theo dõi thêm.</div>
+          <div class="insight bad"><b>Nhóm cần tối ưu:</b> TQ-NS, Clip 4. Ưu tiên chỉnh thông điệp và target trước khi tăng ngân sách.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:16px;">
+      <h2>Bảng xếp hạng hiệu quả từng ad</h2>
+      <p class="desc">Dùng cho phần appendix hoặc khi CEO muốn xem chi tiết từng mẫu.</p>
+      <div class="table-wrap">
+        <table id="rankTable">
+          <thead>
+            <tr>
+              <th>Ad</th>
+              <th class="num">Mess</th>
+              <th class="num">Cost/Mess</th>
+              <th class="num">Lead</th>
+              <th class="num">Mess → Lead</th>
+              <th class="num">Deal</th>
+              <th class="num">Lead → Deal</th>
+              <th class="num">ROAS</th>
+              <th class="num">Doanh số</th>
+              <th>Khuyến nghị</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="footer">Generated dashboard • Có thể upload file này lên GitHub Pages và đặt tên là <b>index.html</b>.</div>
+  </div>
+
+<script>
+const rawData = [{"ad": "MRI/CT Photo", "full": "TSUT | Máy MRI/CT | Photo 1:1", "format": "Photo", "mess": 1184, "cost_mess": 197888, "lead": 186, "cost_lead": 1259674, "deal": 37, "revenue": 360899927, "spend": 234299351, "messToLead": 15.71, "leadToDeal": 19.89, "messToDeal": 3.12, "roas": 1.54, "costDeal": 6332415, "net": 126600576, "recommendation": "Scale có kiểm soát"}, {"ad": "Clip 7", "full": "TSUT | Clip 7 | Video 1:1", "format": "Video", "mess": 1035, "cost_mess": 168027, "lead": 198, "cost_lead": 878321, "deal": 13, "revenue": 168168500, "spend": 173907527, "messToLead": 19.13, "leadToDeal": 6.57, "messToDeal": 1.26, "roas": 0.97, "costDeal": 13377502, "net": -5739027, "recommendation": "Tối ưu chất lượng sau mess"}, {"ad": "TQ-TS", "full": "TSUT | Clip Tổng Quan | Video 1:1", "format": "Video", "mess": 347, "cost_mess": 283491, "lead": 47, "cost_lead": 2093006, "deal": 10, "revenue": 153037500, "spend": 98371287, "messToLead": 13.54, "leadToDeal": 21.28, "messToDeal": 2.88, "roas": 1.56, "costDeal": 9837129, "net": 54666213, "recommendation": "Tối ưu nội dung/target"}, {"ad": "Clip 1", "full": "TSUT | Clip 1 | Video 1:1", "format": "Video", "mess": 23, "cost_mess": 229636, "lead": 3, "cost_lead": 1760539, "deal": 4, "revenue": 49635000, "spend": 5281618, "messToLead": 13.04, "leadToDeal": 133.33, "messToDeal": 17.39, "roas": 9.4, "costDeal": 1320404, "net": 44353382, "recommendation": "Test tăng ngân sách nhỏ"}, {"ad": "Clip 4", "full": "TSUT | Clip 4 | Oct 21 | Video 1:1", "format": "Video", "mess": 428, "cost_mess": 149066, "lead": 45, "cost_lead": 1417783, "deal": 5, "revenue": 46396760, "spend": 63800252, "messToLead": 10.51, "leadToDeal": 11.11, "messToDeal": 1.17, "roas": 0.73, "costDeal": 12760050, "net": -17403492, "recommendation": "Tối ưu nội dung/target"}, {"ad": "Clip 6", "full": "TSUT | Clip 6 | Video 1:1", "format": "Video", "mess": 50, "cost_mess": 324649, "lead": 9, "cost_lead": 1803608, "deal": 6, "revenue": 44432500, "spend": 16232471, "messToLead": 18.0, "leadToDeal": 66.67, "messToDeal": 12.0, "roas": 2.74, "costDeal": 2705412, "net": 28200029, "recommendation": "Test tăng ngân sách nhỏ"}, {"ad": "Não 3D", "full": "TSĐQ | Não 3D | Video 1:1", "format": "Video", "mess": 1423, "cost_mess": 146385, "lead": 160, "cost_lead": 1301912, "deal": 23, "revenue": 214561985, "spend": 208305949, "messToLead": 11.24, "leadToDeal": 14.37, "messToDeal": 1.62, "roas": 1.03, "costDeal": 9056780, "net": 6256036, "recommendation": "Giữ ngân sách, tối ưu chốt"}, {"ad": "Bác Tâm", "full": "TSĐQ | Clip Bác Tâm 16-11 | Video 1:1", "format": "Video", "mess": 266, "cost_mess": 260911, "lead": 69, "cost_lead": 1005832, "deal": 12, "revenue": 150712000, "spend": 69402374, "messToLead": 25.94, "leadToDeal": 17.39, "messToDeal": 4.51, "roas": 2.17, "costDeal": 5783531, "net": 81309626, "recommendation": "Scale có kiểm soát"}, {"ad": "PACS", "full": "TSĐQ | Clip 3 | Công Nghệ PACS", "format": "Video", "mess": 237, "cost_mess": 299021, "lead": 54, "cost_lead": 1312371, "deal": 6, "revenue": 100192750, "spend": 70868033, "messToLead": 22.78, "leadToDeal": 11.11, "messToDeal": 2.53, "roas": 1.41, "costDeal": 11811339, "net": 29324717, "recommendation": "Tối ưu nội dung/target"}, {"ad": "Nội soi Photo", "full": "NSTH | Ảnh Nội soi êm ái Nữ | Photo 1:1", "format": "Photo", "mess": 80, "cost_mess": 215283, "lead": 7, "cost_lead": 2460380, "deal": 3, "revenue": 27270000, "spend": 17222660, "messToLead": 8.75, "leadToDeal": 42.86, "messToDeal": 3.75, "roas": 1.58, "costDeal": 5740887, "net": 10047340, "recommendation": "Tối ưu nội dung/target"}, {"ad": "Nguyệt Review", "full": "NSTH | Nguyệt Review | Video 9:16", "format": "Video", "mess": 929, "cost_mess": 117393, "lead": 124, "cost_lead": 879499, "deal": 4, "revenue": 26830000, "spend": 109057874, "messToLead": 13.35, "leadToDeal": 3.23, "messToDeal": 0.43, "roas": 0.25, "costDeal": 27264468, "net": -82227874, "recommendation": "Tối ưu chất lượng sau mess"}, {"ad": "TQ-NS", "full": "NSTH | Tổng Quan | Video 1:1", "format": "Video", "mess": 257, "cost_mess": 181615, "lead": 45, "cost_lead": 1037223, "deal": 2, "revenue": 16917500, "spend": 46675037, "messToLead": 17.51, "leadToDeal": 4.44, "messToDeal": 0.78, "roas": 0.36, "costDeal": 23337518, "net": -29757537, "recommendation": "Tối ưu chất lượng sau mess"}];
+const kpis = {"total_mess": 6259, "total_lead": 947, "total_deal": 125, "total_revenue": 1359054422, "total_spend": 1113424433, "avg_cost_mess": 177891, "avg_cost_lead": 1175738, "avg_cost_deal": 8907395, "mess_to_lead": 15.13, "lead_to_deal": 13.2, "mess_to_deal": 2.0, "roas": 1.22};
+
+const fmt = new Intl.NumberFormat('vi-VN');
+const money = (v) => fmt.format(Math.round(v)) + 'đ';
+const moneyM = (v) => (v / 1000000).toFixed(v >= 100000000 ? 0 : 1).replace('.', ',') + 'M';
+const pct = (v) => v.toFixed(2).replace('.', ',') + '%';
+const roas = (v) => v.toFixed(2).replace('.', ',') + 'x';
+
+const gridColor = 'rgba(255,255,255,.08)';
+const tickColor = 'rgba(255,255,255,.56)';
+const textColor = '#f5f2ea';
+
+function commonOptions(extra = {}) {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { labels: { color: textColor, usePointStyle: true, boxWidth: 8 } },
+      tooltip: {
+        backgroundColor: 'rgba(18,18,16,.95)',
+        titleColor: '#fff',
+        bodyColor: '#f5f2ea',
+        borderColor: 'rgba(255,255,255,.12)',
+        borderWidth: 1,
+        padding: 12
+      }
+    },
+    scales: {
+      x: { ticks: { color: tickColor }, grid: { color: gridColor } },
+      y: { ticks: { color: tickColor }, grid: { color: gridColor } }
+    },
+    ...extra
+  };
+}
+
+function renderKpis() {
+  const cards = [
+    ['Tổng chi tiêu', moneyM(kpis.total_spend), 'Số tiền ads đã chi'],
+    ['Tổng doanh số', moneyM(kpis.total_revenue), 'Doanh số ghi nhận'],
+    ['ROAS tổng', roas(kpis.roas), 'Doanh số / Chi tiêu'],
+    ['Tổng Mess', fmt.format(kpis.total_mess), 'Tổng tin nhắn'],
+    ['Tổng Lead', fmt.format(kpis.total_lead), 'Tổng SĐT'],
+    ['Done Deal', fmt.format(kpis.total_deal), 'Tổng khách chốt'],
+    ['Cost/Mess TB', money(kpis.avg_cost_mess), 'Chi phí/tin nhắn'],
+    ['Cost/Lead TB', money(kpis.avg_cost_lead), 'Chi phí/SĐT']
+  ];
+  document.getElementById('kpiCards').innerHTML = cards.map(c => `
+    <div class="kpi">
+      <div class="label">${c[0]}</div>
+      <div class="value">${c[1]}</div>
+      <div class="note">${c[2]}</div>
+    </div>`).join('');
+}
+
+function chartQuality() {
+  const labels = rawData.map(d => d.ad);
+  new Chart(document.getElementById('qualityChart'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {
+          type: 'bar',
+          label: 'Cost/Mess',
+          data: rawData.map(d => d.cost_mess / 1000),
+          backgroundColor: 'rgba(78, 152, 232, .85)',
+          borderRadius: 8,
+          yAxisID: 'y'
+        },
+        {
+          type: 'line',
+          label: 'Mess-to-Lead Rate',
+          data: rawData.map(d => d.messToLead),
+          borderColor: '#f39c7b',
+          backgroundColor: '#f39c7b',
+          pointRadius: 4,
+          tension: .35,
+          yAxisID: 'y1'
+        }
+      ]
+    },
+    options: commonOptions({
+      scales: {
+        x: { ticks: { color: tickColor, maxRotation: 35, minRotation: 35 }, grid: { display:false } },
+        y: {
+          position: 'left',
+          title: { display: true, text: 'Cost/Mess (nghìn VND)', color: tickColor },
+          ticks: { color: tickColor, callback: v => v + 'K' },
+          grid: { color: gridColor }
+        },
+        y1: {
+          position: 'right',
+          title: { display: true, text: 'Mess-to-Lead (%)', color: tickColor },
+          ticks: { color: tickColor, callback: v => v + '%' },
+          grid: { display: false },
+          min: 0
+        }
+      },
+      plugins: {
+        legend: { labels: { color: textColor, usePointStyle: true } },
+        tooltip: {
+          callbacks: {
+            label: ctx => ctx.dataset.label.includes('Cost') 
+              ? ctx.dataset.label + ': ' + Math.round(ctx.raw) + 'K'
+              : ctx.dataset.label + ': ' + pct(ctx.raw)
+          }
+        }
+      }
+    })
+  });
+}
+
+function chartMess() {
+  const sorted = [...rawData].sort((a,b) => b.mess - a.mess);
+  new Chart(document.getElementById('messChart'), {
+    type: 'bar',
+    data: {
+      labels: sorted.map(d => d.ad),
+      datasets: [{
+        label: 'Mess',
+        data: sorted.map(d => d.mess),
+        backgroundColor: sorted.map((d,i) => i < 3 ? '#2c7fd9' : 'rgba(105,170,247,.65)'),
+        borderRadius: 8
+      }]
+    },
+    options: commonOptions({
+      scales: {
+        x: { ticks: { color: tickColor, maxRotation: 35, minRotation: 35 }, grid: { display:false } },
+        y: { ticks: { color: tickColor }, grid: { color: gridColor } }
+      },
+      plugins: { legend: { display: false } }
+    })
+  });
+}
+
+function chartFunnel() {
+  new Chart(document.getElementById('funnelChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Mess', 'Lead/SĐT', 'Done Deal'],
+      datasets: [{
+        label: 'Volume',
+        data: [kpis.total_mess, kpis.total_lead, kpis.total_deal],
+        backgroundColor: ['#69aaf7', '#f39c7b', '#92c94b'],
+        borderRadius: 10
+      }]
+    },
+    options: commonOptions({
+      indexAxis: 'y',
+      scales: {
+        x: { ticks: { color: tickColor }, grid: { color: gridColor } },
+        y: { ticks: { color: tickColor }, grid: { display:false } }
+      },
+      plugins: {
+        legend: { display:false },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              const val = ctx.raw;
+              let rate = '';
+              if(ctx.label === 'Lead/SĐT') rate = ' • ' + pct(kpis.mess_to_lead) + ' từ Mess';
+              if(ctx.label === 'Done Deal') rate = ' • ' + pct(kpis.lead_to_deal) + ' từ Lead';
+              return fmt.format(val) + rate;
+            }
+          }
+        }
+      }
+    })
+  });
+}
+
+function chartRoas() {
+  const sorted = [...rawData].sort((a,b) => b.roas - a.roas);
+  new Chart(document.getElementById('roasChart'), {
+    type: 'bar',
+    data: {
+      labels: sorted.map(d => d.ad),
+      datasets: [{
+        label: 'ROAS',
+        data: sorted.map(d => d.roas),
+        backgroundColor: sorted.map(d => d.roas >= 2 ? '#92c94b' : d.roas >= 1 ? '#f39c7b' : '#eb5757'),
+        borderRadius: 8
+      }]
+    },
+    options: commonOptions({
+      scales: {
+        x: { ticks: { color: tickColor, maxRotation: 35, minRotation: 35 }, grid: { display:false } },
+        y: { ticks: { color: tickColor, callback: v => v + 'x' }, grid: { color: gridColor }, beginAtZero: true }
+      },
+      plugins: {
+        legend: { display:false },
+        tooltip: { callbacks: { label: ctx => 'ROAS: ' + roas(ctx.raw) } }
+      }
+    })
+  });
+}
+
+function chartRevenueSpend() {
+  const sorted = [...rawData].sort((a,b) => b.revenue - a.revenue);
+  new Chart(document.getElementById('revenueSpendChart'), {
+    type: 'bar',
+    data: {
+      labels: sorted.map(d => d.ad),
+      datasets: [
+        {
+          label: 'Doanh số',
+          data: sorted.map(d => d.revenue / 1000000),
+          backgroundColor: 'rgba(146,201,75,.82)',
+          borderRadius: 8
+        },
+        {
+          label: 'Chi tiêu',
+          data: sorted.map(d => d.spend / 1000000),
+          backgroundColor: 'rgba(235,87,87,.82)',
+          borderRadius: 8
+        }
+      ]
+    },
+    options: commonOptions({
+      scales: {
+        x: { ticks: { color: tickColor, maxRotation: 35, minRotation: 35 }, grid: { display:false } },
+        y: { ticks: { color: tickColor, callback: v => v + 'M' }, grid: { color: gridColor } }
+      },
+      plugins: {
+        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.raw.toFixed(1).replace('.', ',') + 'M' } }
+      }
+    })
+  });
+}
+
+function chartMatrix() {
+  new Chart(document.getElementById('matrixChart'), {
+    type: 'scatter',
+    data: {
+      datasets: [{
+        label: 'Ads',
+        data: rawData.map(d => ({ x: d.mess, y: d.roas, label: d.ad, deal: d.deal })),
+        backgroundColor: rawData.map(d => d.roas >= 1 ? 'rgba(146,201,75,.88)' : 'rgba(235,87,87,.88)'),
+        pointRadius: rawData.map(d => Math.max(5, Math.min(16, d.deal/2 + 5))),
+        pointHoverRadius: 13
+      }]
+    },
+    options: commonOptions({
+      scales: {
+        x: {
+          title: { display: true, text: 'Volume mess', color: tickColor },
+          ticks: { color: tickColor },
+          grid: { color: gridColor }
+        },
+        y: {
+          title: { display: true, text: 'ROAS', color: tickColor },
+          ticks: { color: tickColor, callback: v => v + 'x' },
+          grid: { color: gridColor },
+          beginAtZero: true
+        }
+      },
+      plugins: {
+        legend: { display:false },
+        tooltip: {
+          callbacks: {
+            title: items => items[0].raw.label,
+            label: ctx => ['Mess: ' + fmt.format(ctx.raw.x), 'ROAS: ' + roas(ctx.raw.y), 'Deal: ' + fmt.format(ctx.raw.deal)]
+          }
+        }
+      }
+    })
+  });
+}
+
+function renderTable() {
+  const sorted = [...rawData].sort((a,b) => b.revenue - a.revenue);
+  const rows = sorted.map(d => {
+    let cls = d.roas >= 1.5 ? 'green' : d.roas >= 1 ? 'yellow' : 'red';
+    return `<tr>
+      <td><b>${d.ad}</b><br><span style="color:var(--muted);font-size:12px;">${d.full}</span></td>
+      <td class="num">${fmt.format(d.mess)}</td>
+      <td class="num">${money(d.cost_mess)}</td>
+      <td class="num">${fmt.format(d.lead)}</td>
+      <td class="num">${pct(d.messToLead)}</td>
+      <td class="num">${fmt.format(d.deal)}</td>
+      <td class="num">${pct(d.leadToDeal)}</td>
+      <td class="num"><span class="tag ${cls}">${roas(d.roas)}</span></td>
+      <td class="num">${moneyM(d.revenue)}</td>
+      <td><span class="tag">${d.recommendation}</span></td>
+    </tr>`;
+  }).join('');
+  document.querySelector('#rankTable tbody').innerHTML = rows;
+}
+
+renderKpis();
+chartQuality();
+chartMess();
+chartFunnel();
+chartRoas();
+chartRevenueSpend();
+chartMatrix();
+renderTable();
+</script>
+</body>
+</html>
